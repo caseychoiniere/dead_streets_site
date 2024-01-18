@@ -1,10 +1,10 @@
 {
-  "name": "",
+  "name": "dead-streets-site",
   "version": "1.0.0",
   "description": "",
   "scripts": {
     "dev": "next",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start"
   },
   "keywords": [],
@@ -27,7 +27,9 @@
   "devDependencies": {
     "@types/node": "17.0.14",
     "@types/react": "^18",
+    "at": "^0.0.1-security",
+    "latest": "^0.2.0",
     "prisma": "^5.8.0",
-    "typescript": "4.5.5"
+    "typescript": "^4.5.5"
   }
 }
