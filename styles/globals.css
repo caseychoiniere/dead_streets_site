@@ -4,7 +4,7 @@
 
 body {
     /*@apply bg-black;*/
-    background-image: url('/bricks.png');
+    background-image: url('/street.png');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;

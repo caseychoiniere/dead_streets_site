@@ -1,4 +1,5 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
+import { useSession, signIn } from "next-auth/react";
 import {upload} from '@vercel/blob/client';
 import Layout from '../components/Layout';
 import Router from 'next/router';
@@ -41,11 +42,20 @@ const CreateEvent: React.FC<{ event: EventProps }> = ({event}) => {
     const inputFileRef = useRef<HTMLInputElement>(null);
     const [blob, setBlob] = useState<PutBlobResult | null>(null);
 
+    const { data: session, status } = useSession();
+    const loading = status === "loading";
+
+    useEffect(() => {
+        if (!loading && !session) signIn();
+    }, [session, loading]);
+
+    if (!session) return <div></div>;
+    if (loading) return <div>Loading...</div>;
+
     const submitData = async (e: React.SyntheticEvent) => {
         e.preventDefault();
         try {
             const body = {title, location, description, date, image, eventURL};
-            console.log(body)
             if (!event) {
                 await fetch('/api/event', {
                     method: 'POST',
@@ -64,7 +74,6 @@ const CreateEvent: React.FC<{ event: EventProps }> = ({event}) => {
             console.error(error);
         }
     };
-console.log(blob)
 
     return (
         <Layout>
@@ -90,8 +99,12 @@ console.log(blob)
                 >
                     <div className="p-16 pb-0">
                         <h1 className="text-white text-xl pb-2">Event Flyer</h1>
-                        <input name="file" ref={inputFileRef} type="file" required/>
-                        <button type="submit">Upload</button>
+                        <input name="file"
+                               className="block w-full border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 file:bg-gray-50 file:border-0 file:bg-gray-100 file:me-4 file:py-2 file:px-4 dark:file:bg-gray-700 dark:file:text-gray-400 max-w-sm" ref={inputFileRef} type="file" required/>
+                        <button type="submit"
+                                className="mt-6 py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-teal-100 text-teal-800 hover:bg-teal-200 disabled:opacity-50 disabled:pointer-events-none dark:hover:bg-teal-900 dark:text-teal-500 dark:hover:text-teal-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+                            Upload
+                        </button>
                         {blob && (
                             <div className="pt-4 max-w-52">
                                 {`Blob url: ${blob.url}`}
@@ -158,17 +171,16 @@ console.log(blob)
                                 value={blob?.url || image}
                             />
                         </div>
-                        <input disabled={!title || !location || !date} type="submit" className="rounded-md"
+                        <input disabled={!title || !location || !date} type="submit" className="rounded-md bg-teal-100"
                                value={event ? "Save" : "Create Event"}/>
-                        <a className="back p-4 bg-red-700 rounded-md" href="#" onClick={() => Router.push('/')}>
+                        <button className="back p-4 bg-red-700 rounded-md text-white" onClick={() => Router.push('/')}>
                             Cancel
-                        </a>
+                        </button>
                     </div>
                 </form>
             </div>
             <style jsx>{`
                 .page {
-                    //background: var(--geist-background);
                     padding: 3rem;
                     display: flex;
                     justify-content: center;

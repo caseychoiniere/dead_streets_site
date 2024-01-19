@@ -91,8 +91,8 @@ const Blog: React.FC<Props> = (props) => {
 
                 @media (min-width: 1200px) {
                     .hero {
-                        height: 300px; // Smaller height for smaller screens
-                        padding: 0 20px; // Adjust padding for smaller screens
+                        //height: 300px; // Smaller height for smaller screens
+                        //padding: 0 20px; // Adjust padding for smaller screens
                     }
 
                     .logo {
@@ -109,7 +109,7 @@ const Blog: React.FC<Props> = (props) => {
                 @media (max-width: 820px) {
                     .hero {
                         //height: 300px; // Smaller height for smaller screens
-                        padding: 0 20px; // Adjust padding for smaller screens
+                        //padding: 0 20px; // Adjust padding for smaller screens
                     }
 
                     .logo {
@@ -120,7 +120,7 @@ const Blog: React.FC<Props> = (props) => {
                 @media (max-width: 600px) {
                     .hero {
                         height: 200px; // Smaller height for smaller screens
-                        padding: 0 20px; // Adjust padding for smaller screens
+                        //padding: 0 20px; // Adjust padding for smaller screens
                     }
 
                     .logo {
