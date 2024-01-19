@@ -1,9 +1,12 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
+import {upload} from '@vercel/blob/client';
 import Layout from '../components/Layout';
 import Router from 'next/router';
 import {GetServerSideProps} from "next";
 import {EventProps} from "../components/Event";
 import prisma from "../lib/prisma";
+import type {PutBlobResult} from "@vercel/blob";
+import Image from "next/image";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const {id} = context.query;
@@ -29,19 +32,20 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
 
 const CreateEvent: React.FC<{ event: EventProps }> = ({event}) => {
-    console.log(event)
-    console.log(event)
     const [title, setTitle] = useState(event?.title || '');
     const [location, setLocation] = useState(event?.location || '');
     const [description, setDescription] = useState(event?.description || '');
     const [date, setDate] = useState(event?.date ? event.date.substring(0, 10) : '')
     const [image, setImage] = useState(event?.image || '');
     const [eventURL, setEventUrl] = useState(event?.eventURL || '');
+    const inputFileRef = useRef<HTMLInputElement>(null);
+    const [blob, setBlob] = useState<PutBlobResult | null>(null);
 
     const submitData = async (e: React.SyntheticEvent) => {
         e.preventDefault();
         try {
             const body = {title, location, description, date, image, eventURL};
+            console.log(body)
             if (!event) {
                 await fetch('/api/event', {
                     method: 'POST',
@@ -60,16 +64,52 @@ const CreateEvent: React.FC<{ event: EventProps }> = ({event}) => {
             console.error(error);
         }
     };
-
+console.log(blob)
 
     return (
         <Layout>
             <div>
+                <form
+                    style={{paddingTop: 100, color: "whitesmoke"}}
+                    onSubmit={async (event) => {
+                        event.preventDefault();
+
+                        if (!inputFileRef.current?.files) {
+                            throw new Error('No file selected');
+                        }
+
+                        const file = inputFileRef.current.files[0];
+
+                        const newBlob = await upload(file.name, file, {
+                            access: 'public',
+                            handleUploadUrl: '/api/event/upload',
+                        });
+                        setBlob(newBlob);
+                        setImage(newBlob.url);
+                    }}
+                >
+                    <div className="p-16 pb-0">
+                        <h1 className="text-white text-xl pb-2">Event Flyer</h1>
+                        <input name="file" ref={inputFileRef} type="file" required/>
+                        <button type="submit">Upload</button>
+                        {blob && (
+                            <div className="pt-4 max-w-52">
+                                {`Blob url: ${blob.url}`}
+                                <Image
+                                    className="inset-0 h-full w-full object-cover object-center"
+                                    src={blob.url}
+                                    width={100}
+                                    height={100}
+                                    alt={blob.pathname}
+                                />
+                            </div>
+                        )}
+                    </div>
+                </form>
                 <form onSubmit={submitData}>
-                    <div className="p-16">
+                    <div className="p-16 pt-6">
                         <h1 className="text-white text-xl">Event Details</h1>
                         <input
-                            className="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-gray-900"
                             autoFocus
                             onChange={(e) => setTitle(e.target.value)}
                             placeholder="Title"
@@ -78,7 +118,6 @@ const CreateEvent: React.FC<{ event: EventProps }> = ({event}) => {
                         />
                         <label>Location</label>
                         <input
-                            className="peer w-full h-full bg-transparent text-blue-gray-700 font-sans font-normal outline outline-0 focus:outline-0 disabled:bg-blue-gray-50 disabled:border-0 transition-all placeholder-shown:border placeholder-shown:border-blue-gray-200 placeholder-shown:border-t-blue-gray-200 border focus:border-2 border-t-transparent focus:border-t-transparent text-sm px-3 py-2.5 rounded-[7px] border-blue-gray-200 focus:border-white"
                             onChange={(e) => setLocation(e.target.value)}
                             placeholder="Location"
                             type="text"
@@ -116,11 +155,11 @@ const CreateEvent: React.FC<{ event: EventProps }> = ({event}) => {
                                 onChange={(e) => setImage(e.target.value)}
                                 placeholder="Image URL"
                                 type="text"
-                                value={image}
+                                value={blob?.url || image}
                             />
                         </div>
                         <input disabled={!title || !location || !date} type="submit" className="rounded-md"
-                               value={event ? "Edit Event" : "Create Event"}/>
+                               value={event ? "Save" : "Create Event"}/>
                         <a className="back p-4 bg-red-700 rounded-md" href="#" onClick={() => Router.push('/')}>
                             Cancel
                         </a>

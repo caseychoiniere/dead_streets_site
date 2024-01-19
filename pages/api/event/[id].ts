@@ -31,6 +31,8 @@ export default async function handle(req: {
         return res.status(401).json({message: "Unauthorized"});
     }
 
+    console.log(session)
+
     const eventId = req.query.id;
     console.log(req.method)
     if (req.method === 'DELETE') {
