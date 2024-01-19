@@ -21,13 +21,14 @@ export type EventProps = {
 function formatDate(dateString: string): string {
     const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const date = new Date(dateString);
-    const dayOfWeek = days[date.getDay()];
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    const year = date.getFullYear();
+    const dayOfWeek = days[date.getUTCDay()];
+    const month = date.getUTCMonth() + 1; // getUTCMonth returns 0-11
+    const day = date.getUTCDate();
+    const year = date.getUTCFullYear();
 
     return `${dayOfWeek} ~ ${month}/${day}/${year}`;
 }
+
 
 
 const Event: React.FC<{ event: EventProps }> = ({event}) => {
@@ -55,7 +56,7 @@ console.log(event)
                         />
                     </div>
                     <div className="w-full py-4 px-6 text-white flex flex-col">
-                        <h3 className="font-semibold text-2xl text-white leading-tight truncate">{event.title}</h3>
+                        <h3 className="font-semibold text-2xl text-wrap text-white leading-tight truncate">{event.title}</h3>
                         <p className="mt-2 text-lg">
                             {event.location}
                         </p>

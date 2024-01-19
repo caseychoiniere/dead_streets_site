@@ -147,7 +147,7 @@ const CreateEvent: React.FC<{ event: EventProps }> = ({event}) => {
                         <div>
                             <label>Event URL</label>
                             <input
-                                onChange={(e) => setImage(e.target.value)}
+                                onChange={(e) => setEventUrl(e.target.value)}
                                 placeholder="Event URL"
                                 type="text"
                                 value={eventURL}
