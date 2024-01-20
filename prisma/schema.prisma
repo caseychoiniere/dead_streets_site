@@ -76,6 +76,8 @@ model Event {
   title       String
   location    String
   description String?
+  time        String?
+  cost        String?
   date        DateTime
   image       String?
   eventURL    String?

@@ -4,12 +4,14 @@ import Image from "next/image";
 import {useSession} from "next-auth/react";
 
 export type EventProps = {
+    cost?: string;
     id: string;
     title: string;
     location: string;
     description: string;
     eventURL: string;
     date: string;
+    time?: string;
     image?: string;
     createdBy: {
         name: string;
@@ -63,9 +65,15 @@ console.log(event)
                         <p className="mt-2 text-lg">
                             {event.description}
                         </p>
+                        <p className="mt-2 text-lg">
+                            {event.cost}
+                        </p>
+                        <p className="mt-2 text-lg">
+                            {event.time}
+                        </p>
                         {event.eventURL && <a href={event.eventURL} target="_blank"
-                                               className="mt-2 text-lg underline text-blue-300">
-                            Event Page
+                                              className="mt-2 text-lg underline text-blue-300">
+                          Event Page
                         </a>}
                         <p className="text-lg text-gray-700 text-white tracking-wide font-semibold mt-2">
                             {formatDate(event.date)}

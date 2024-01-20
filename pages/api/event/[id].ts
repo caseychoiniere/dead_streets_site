@@ -31,22 +31,21 @@ export default async function handle(req: {
         return res.status(401).json({message: "Unauthorized"});
     }
 
-    console.log(session)
-
     const eventId = req.query.id;
-    console.log(req.method)
     if (req.method === 'DELETE') {
         const event = await prisma.event.delete({
             where: {id: eventId},
         });
         res.json(event);
     } else if (req.method === 'PUT') {
-        const {title, location, description, date, image} = req.body;
+        const {title, location, description, date, image, time, cost} = req.body;
         try {
             const result = await prisma.event.update({
                 where: {id: eventId},
                 data: {
-                    title: title,
+                    title,
+                    time: time,
+                    cost,
                     location: location,
                     description: description,
                     date: new Date(date),

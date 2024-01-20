@@ -30,6 +30,8 @@ export const getStaticProps: GetStaticProps = async () => {
         },
     });
 
+    console.log(events)
+
     // Convert date fields to serializable format
     // @ts-ignore
     events = events.map(event => ({

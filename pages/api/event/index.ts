@@ -11,6 +11,8 @@ type NewEventResponse = {
     };
     json: (arg0: {
         id: string;
+        cost: string;
+        time: string;
         title: string;
         location: string;
         description: string;
@@ -23,7 +25,7 @@ type NewEventResponse = {
 }
 
 export default async function handle(req: { body: EventProps; }, res: NewEventResponse) {
-    const {title, location, description, date, image, eventURL} = req.body;
+    const {title, time, cost, location, description, date, image, eventURL} = req.body;
 
     // @ts-ignore
     const session = await getServerSession(req, res, options)
@@ -32,10 +34,14 @@ export default async function handle(req: { body: EventProps; }, res: NewEventRe
         return res.status(401).json({message: "Unauthorized"});
     }
 
+    console.log(req.body)
+
     try {
         const result = await prisma.event.create({
             data: {
                 title: title,
+                time: time,
+                cost: cost,
                 location: location,
                 description: description,
                 date: new Date(date),

@@ -39,6 +39,8 @@ const CreateEvent: React.FC<{ event: EventProps }> = ({event}) => {
     const [date, setDate] = useState(event?.date ? event.date.substring(0, 10) : '')
     const [image, setImage] = useState(event?.image || '');
     const [eventURL, setEventUrl] = useState(event?.eventURL || '');
+    const [cost, setCost] = useState(event?.cost || '');
+    const [time, setTime] = useState(event?.time || '');
     const inputFileRef = useRef<HTMLInputElement>(null);
     const [blob, setBlob] = useState<PutBlobResult | null>(null);
 
@@ -52,10 +54,13 @@ const CreateEvent: React.FC<{ event: EventProps }> = ({event}) => {
     if (!session) return <div></div>;
     if (loading) return <div>Loading...</div>;
 
+    console.log(time, cost)
+
     const submitData = async (e: React.SyntheticEvent) => {
         e.preventDefault();
         try {
-            const body = {title, location, description, date, image, eventURL};
+            const body = {title, time, cost, location, description, date, image, eventURL};
+    console.log(body)
             if (!event) {
                 await fetch('/api/event', {
                     method: 'POST',
@@ -153,6 +158,20 @@ const CreateEvent: React.FC<{ event: EventProps }> = ({event}) => {
                                 value={eventURL}
                             />
                         </div>
+                        <label>Cost</label>
+                        <input
+                            onChange={(e) => setCost(e.target.value)}
+                            placeholder="Cost"
+                            type="text"
+                            value={cost}
+                        />
+                        <label>Time Details</label>
+                        <input
+                            onChange={(e) => setTime(e.target.value)}
+                            placeholder="Time Details"
+                            type="text"
+                            value={time}
+                        />
                         <label>Date</label>
                         <div>
                             <input
