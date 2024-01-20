@@ -106,6 +106,7 @@ const Blog: React.FC<Props> = (props) => {
                         align-items: center;
                         display: flex;
                         flex-direction: column;
+                        margin-top: -26px;
                     }
                     
                     .upcoming-shows-header {

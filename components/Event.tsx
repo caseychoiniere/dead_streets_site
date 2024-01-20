@@ -54,7 +54,7 @@ const Event: React.FC<{ event: EventProps }> = ({event}) => {
                             src={event.image}
                             width={400}
                             height={100}
-                            alt="Dead Streets Wolf Logo"
+                            alt={`Poster for ${event.title}`}
                         />
                     </div>
                     <div className="w-full py-4 px-6 text-white flex flex-col">
