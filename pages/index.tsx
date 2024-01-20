@@ -73,7 +73,6 @@ const Blog: React.FC<Props> = (props) => {
             </div>
             <style jsx>{`
                 .hero {
-                    //background-image: url('/background_art.png'); // Adjust to your image path
                     background-size: cover;
                     background-position: center;
                     position: absolute;
@@ -87,17 +86,6 @@ const Blog: React.FC<Props> = (props) => {
                 
                 .upcoming-shows-header {
                     margin: 0 16px 8px 16px;
-                }
-
-                @media (min-width: 1200px) {
-                    .hero {
-                        //height: 300px; // Smaller height for smaller screens
-                        //padding: 0 20px; // Adjust padding for smaller screens
-                    }
-
-                    .logo {
-                        height: 100px; // Adjust logo size as needed
-                    }
                 }
 
                 @media (min-width: 1024px) {
@@ -114,12 +102,15 @@ const Blog: React.FC<Props> = (props) => {
 
                 @media (max-width: 412px) {
                     .hero {
-                        padding-left: 26vw;
+                        width: 100%;
+                        align-items: center;
+                        display: flex;
+                        flex-direction: column;
                     }
-                }
-
-                .logo {
-                    height: 100px; // Adjust logo size as needed
+                    
+                    .upcoming-shows-header {
+                        text-align: center;
+                    }
                 }
 
                 .page {
