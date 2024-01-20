@@ -105,29 +105,18 @@ const Blog: React.FC<Props> = (props) => {
                         margin-left: 11%;
                     }
                 }
-
-                @media (max-width: 820px) {
-                    .hero {
-                        //height: 300px; // Smaller height for smaller screens
-                        //padding: 0 20px; // Adjust padding for smaller screens
-                    }
-
-                    .logo {
-                        height: 50px; // Adjust logo size as needed
-                    }
-                }
-
+                
                 @media (max-width: 600px) {
                     .hero {
-                        height: 200px; // Smaller height for smaller screens
-                        //padding: 0 20px; // Adjust padding for smaller screens
-                    }
-
-                    .logo {
-                        height: 50px; // Adjust logo size as needed
+                        height: 200px; 
                     }
                 }
 
+                @media (max-width: 412px) {
+                    .hero {
+                        padding-left: 26vw;
+                    }
+                }
 
                 .logo {
                     height: 100px; // Adjust logo size as needed
