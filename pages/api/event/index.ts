@@ -51,7 +51,6 @@ export default async function handle(req: { body: EventProps; }, res: NewEventRe
                 published: true
             },
         });
-        console.log(result)
         res.json(result);
     } catch (error) {
         console.log(error)

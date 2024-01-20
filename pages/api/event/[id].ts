@@ -54,7 +54,6 @@ export default async function handle(req: {
                     published: true
                 }
             });
-            console.log(result)
             res.json(result);
         } catch (error) {
             console.log(error)

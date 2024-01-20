@@ -105,7 +105,7 @@ const Header: React.FC = () => {
     if (status === 'loading') return <h1>"loading admin options..."</h1>
 
     return (
-        <nav className="flex justify-between items-center py-4 absolute w-full z-10 bg-transparent">
+        <nav className="flex justify-between items-center py-4 w-full z-10 bg-transparent" style={{position: 'sticky', top: 0}}>
             {options}
             <figure className="flex flex-col gap-3 mr-14 pt-4">
                 {socialMediaIcons.map(({icon, link}, index) => (

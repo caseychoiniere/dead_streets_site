@@ -42,7 +42,7 @@ const Event: React.FC<{ event: EventProps }> = ({event}) => {
         });
         Router.push('/')
     }
-console.log(event)
+
     return (
         <div id="card" className="">
             <div className="container w-100 lg:w-4/5 mx-auto flex flex-col">

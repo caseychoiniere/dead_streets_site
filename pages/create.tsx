@@ -54,13 +54,10 @@ const CreateEvent: React.FC<{ event: EventProps }> = ({event}) => {
     if (!session) return <div></div>;
     if (loading) return <div>Loading...</div>;
 
-    console.log(time, cost)
-
     const submitData = async (e: React.SyntheticEvent) => {
         e.preventDefault();
         try {
             const body = {title, time, cost, location, description, date, image, eventURL};
-    console.log(body)
             if (!event) {
                 await fetch('/api/event', {
                     method: 'POST',

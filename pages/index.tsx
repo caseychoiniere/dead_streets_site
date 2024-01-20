@@ -30,8 +30,6 @@ export const getStaticProps: GetStaticProps = async () => {
         },
     });
 
-    console.log(events)
-
     // Convert date fields to serializable format
     // @ts-ignore
     events = events.map(event => ({
@@ -50,17 +48,15 @@ type Props = {
 }
 
 const Blog: React.FC<Props> = (props) => {
-    console.log(props.events)
     const [futureEvents, pastEvents] = sortAndSeparateEvents(props.events);
 
-    console.log("Future Events:", futureEvents);
-    console.log("Past Events:", pastEvents);
     return (
         <Layout>
             <div className="hero">
                 <Image
                     src="/ds_logo.png"
-                    width={140}
+                    style={{marginTop: 60}}
+                    width={200}
                     height={100}
                     alt="Dead Streets Wolf Logo"
                 />
@@ -80,11 +76,13 @@ const Blog: React.FC<Props> = (props) => {
                     //background-image: url('/background_art.png'); // Adjust to your image path
                     background-size: cover;
                     background-position: center;
-                    height: 200px; // Adjust height as needed
+                    position: absolute;
+                    top: 0;
+                    height: 200px;
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                    padding: 0 50px; // Adjust padding as needed
+                    padding: 0 50px;
                 }
                 
                 .upcoming-shows-header {
