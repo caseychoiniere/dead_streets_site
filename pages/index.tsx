@@ -129,8 +129,6 @@ const Blog: React.FC<Props> = (props) => {
                 .event {
                     margin-bottom: 1rem;
                 }
-
-                // Additional styles...
             `}</style>
         </Layout>
     )
