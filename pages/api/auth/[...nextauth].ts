@@ -8,7 +8,7 @@ import prisma from '../../../lib/prisma';
 const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options);
 export default authHandler;
 
-const allowedEmails = ['caseychoiniere@gmail.com']
+const allowedEmails = ['caseychoiniere@gmail.com', 'deadstreets.band@gmail.com', 'ilyseblaze@gmail.com']
 
 export const options = {
     providers: [

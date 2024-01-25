@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import { useSession, signIn } from "next-auth/react";
+import {useSession, signIn} from "next-auth/react";
 import {upload} from '@vercel/blob/client';
 import Layout from '../components/Layout';
 import Router from 'next/router';
@@ -8,6 +8,7 @@ import {EventProps} from "../components/Event";
 import prisma from "../lib/prisma";
 import type {PutBlobResult} from "@vercel/blob";
 import Image from "next/image";
+import Loading from "../components/Loading";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const {id} = context.query;
@@ -43,20 +44,20 @@ const CreateEvent: React.FC<{ event: EventProps }> = ({event}) => {
     const [time, setTime] = useState(event?.time || '');
     const inputFileRef = useRef<HTMLInputElement>(null);
     const [blob, setBlob] = useState<PutBlobResult | null>(null);
+    const [loading, setLoading] = useState(false);
 
-    const { data: session, status } = useSession();
-    const loading = status === "loading";
+    const {data: session, status} = useSession();
 
     useEffect(() => {
-        if (!loading && !session) signIn();
-    }, [session, loading]);
+        if (!loading && !session && status !== "loading") signIn();
+    }, [session, status]);
 
     if (!session) return <div></div>;
-    if (loading) return <div>Loading...</div>;
 
     const submitData = async (e: React.SyntheticEvent) => {
         e.preventDefault();
         try {
+            setLoading(true);
             const body = {title, time, cost, location, description, date, image, eventURL};
             if (!event) {
                 await fetch('/api/event', {
@@ -73,128 +74,140 @@ const CreateEvent: React.FC<{ event: EventProps }> = ({event}) => {
             }
             await Router.push('/');
         } catch (error) {
+            setLoading(false);
             console.error(error);
         }
     };
 
+    console.log(loading)
+
     return (
         <Layout>
-            <div>
-                <form
-                    style={{paddingTop: 100, color: "whitesmoke"}}
-                    onSubmit={async (event) => {
-                        event.preventDefault();
+            {loading ? <Loading />
+                :
+                (
+                    <div>
+                        <form
+                            style={{paddingTop: 100, color: "whitesmoke"}}
+                            onSubmit={async (event) => {
+                                event.preventDefault();
 
-                        if (!inputFileRef.current?.files) {
-                            throw new Error('No file selected');
-                        }
+                                if (!inputFileRef.current?.files) {
+                                    throw new Error('No file selected');
+                                }
 
-                        const file = inputFileRef.current.files[0];
+                                const file = inputFileRef.current.files[0];
 
-                        const newBlob = await upload(file.name, file, {
-                            access: 'public',
-                            handleUploadUrl: '/api/event/upload',
-                        });
-                        setBlob(newBlob);
-                        setImage(newBlob.url);
-                    }}
-                >
-                    <div className="p-16 pb-0">
-                        <h1 className="text-white text-xl pb-2">Event Flyer</h1>
-                        <input name="file"
-                               className="block w-full border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 file:bg-gray-50 file:border-0 file:bg-gray-100 file:me-4 file:py-2 file:px-4 dark:file:bg-gray-700 dark:file:text-gray-400 max-w-sm" ref={inputFileRef} type="file" required/>
-                        <button type="submit"
-                                className="mt-6 py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-teal-100 text-teal-800 hover:bg-teal-200 disabled:opacity-50 disabled:pointer-events-none dark:hover:bg-teal-900 dark:text-teal-500 dark:hover:text-teal-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
-                            Upload
-                        </button>
-                        {blob && (
-                            <div className="pt-4 max-w-52">
-                                {`Blob url: ${blob.url}`}
-                                <Image
-                                    className="inset-0 h-full w-full object-cover object-center"
-                                    src={blob.url}
-                                    width={100}
-                                    height={100}
-                                    alt={blob.pathname}
-                                />
+                                const newBlob = await upload(file.name, file, {
+                                    access: 'public',
+                                    handleUploadUrl: '/api/event/upload',
+                                });
+                                setBlob(newBlob);
+                                setImage(newBlob.url);
+                            }}
+                        >
+                            <div className="p-16 pb-0">
+                                <h1 className="text-white text-xl pb-2">Event Flyer</h1>
+                                <input name="file"
+                                       className="block w-full border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600 file:bg-gray-50 file:border-0 file:bg-gray-100 file:me-4 file:py-2 file:px-4 dark:file:bg-gray-700 dark:file:text-gray-400 max-w-sm"
+                                       ref={inputFileRef} type="file" required/>
+                                <button type="submit"
+                                        className="mt-6 py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-teal-100 text-teal-800 hover:bg-teal-200 disabled:opacity-50 disabled:pointer-events-none dark:hover:bg-teal-900 dark:text-teal-500 dark:hover:text-teal-400 dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+                                    Upload
+                                </button>
+                                {blob && (
+                                    <div className="pt-4 max-w-52">
+                                        {`Blob url: ${blob.url}`}
+                                        <Image
+                                            className="inset-0 h-full w-full object-cover object-center"
+                                            src={blob.url}
+                                            width={100}
+                                            height={100}
+                                            alt={blob.pathname}
+                                        />
+                                    </div>
+                                )}
                             </div>
-                        )}
+                        </form>
+                        <form onSubmit={submitData}>
+                            <div className="p-16 pt-6">
+                                <h1 className="text-white text-xl">Event Details</h1>
+                                <input
+                                    autoFocus
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    placeholder="Title"
+                                    type="text"
+                                    value={title}
+                                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                />
+                                <label>Location</label>
+                                <input
+                                    onChange={(e) => setLocation(e.target.value)}
+                                    placeholder="Location"
+                                    type="text"
+                                    value={location}
+                                />
+                                <label>Description</label>
+                                <textarea
+                                    cols={50}
+                                    onChange={(e) => setDescription(e.target.value)}
+                                    placeholder="Description"
+                                    rows={8}
+                                    value={description}
+                                />
+                                <div>
+                                    <label>Event URL</label>
+                                    <input
+                                        onChange={(e) => setEventUrl(e.target.value)}
+                                        placeholder="Event URL"
+                                        type="text"
+                                        value={eventURL}
+                                    />
+                                </div>
+                                <label>Cost</label>
+                                <input
+                                    onChange={(e) => setCost(e.target.value)}
+                                    placeholder="Cost"
+                                    type="text"
+                                    value={cost}
+                                />
+                                <label>Time Details</label>
+                                <input
+                                    onChange={(e) => setTime(e.target.value)}
+                                    placeholder="Time Details"
+                                    type="text"
+                                    value={time}
+                                />
+                                <label>Date</label>
+                                <div>
+                                    <input
+                                        onChange={(e) => setDate(e.target.value)}
+                                        placeholder="Date (YYYY-MM-DD)"
+                                        type="date"
+                                        value={date}
+                                    />
+                                </div>
+                                <div>
+                                    <label>Image URL</label>
+                                    <input
+                                        onChange={(e) => setImage(e.target.value)}
+                                        placeholder="Image URL"
+                                        type="text"
+                                        value={blob?.url || image}
+                                    />
+                                </div>
+                                <input disabled={!title || !location || !date} type="submit"
+                                       className="rounded-md bg-teal-100"
+                                       value={event ? "Save" : "Create Event"}/>
+                                <button className="back p-4 bg-red-700 rounded-md text-white"
+                                        onClick={() => Router.push('/')}>
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                </form>
-                <form onSubmit={submitData}>
-                    <div className="p-16 pt-6">
-                        <h1 className="text-white text-xl">Event Details</h1>
-                        <input
-                            autoFocus
-                            onChange={(e) => setTitle(e.target.value)}
-                            placeholder="Title"
-                            type="text"
-                            value={title}
-                        />
-                        <label>Location</label>
-                        <input
-                            onChange={(e) => setLocation(e.target.value)}
-                            placeholder="Location"
-                            type="text"
-                            value={location}
-                        />
-                        <label>Description</label>
-                        <textarea
-                            cols={50}
-                            onChange={(e) => setDescription(e.target.value)}
-                            placeholder="Description"
-                            rows={8}
-                            value={description}
-                        />
-                        <div>
-                            <label>Event URL</label>
-                            <input
-                                onChange={(e) => setEventUrl(e.target.value)}
-                                placeholder="Event URL"
-                                type="text"
-                                value={eventURL}
-                            />
-                        </div>
-                        <label>Cost</label>
-                        <input
-                            onChange={(e) => setCost(e.target.value)}
-                            placeholder="Cost"
-                            type="text"
-                            value={cost}
-                        />
-                        <label>Time Details</label>
-                        <input
-                            onChange={(e) => setTime(e.target.value)}
-                            placeholder="Time Details"
-                            type="text"
-                            value={time}
-                        />
-                        <label>Date</label>
-                        <div>
-                            <input
-                                onChange={(e) => setDate(e.target.value)}
-                                placeholder="Date (YYYY-MM-DD)"
-                                type="date"
-                                value={date}
-                            />
-                        </div>
-                        <div>
-                            <label>Image URL</label>
-                            <input
-                                onChange={(e) => setImage(e.target.value)}
-                                placeholder="Image URL"
-                                type="text"
-                                value={blob?.url || image}
-                            />
-                        </div>
-                        <input disabled={!title || !location || !date} type="submit" className="rounded-md bg-teal-100"
-                               value={event ? "Save" : "Create Event"}/>
-                        <button className="back p-4 bg-red-700 rounded-md text-white" onClick={() => Router.push('/')}>
-                            Cancel
-                        </button>
-                    </div>
-                </form>
-            </div>
+                )
+            }
             <style jsx>{`
                 .page {
                     padding: 3rem;
