@@ -44,7 +44,7 @@ const Header: React.FC = () => {
 
     if (!session) {
         options = (
-            <div className="list-none flex gap-14 ml-44">
+            <div className="list-none flex gap-14 ml-32 mb-6">
                 <Link href="/api/auth/signin" style={{opacity: !session ? 0 : 1}}>
                     Log in
                 </Link>
