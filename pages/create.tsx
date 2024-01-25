@@ -79,8 +79,6 @@ const CreateEvent: React.FC<{ event: EventProps }> = ({event}) => {
         }
     };
 
-    console.log(loading)
-
     return (
         <Layout>
             {loading ? <Loading />

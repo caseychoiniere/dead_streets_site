@@ -1,9 +1,11 @@
-import React from "react"
+import React, {useEffect, useState} from "react"
 import prisma from '../lib/prisma';
 import Image from 'next/image'
+import {useRouter} from 'next/router';
 import {GetStaticProps} from "next"
 import Layout from "../components/Layout"
 import Event, {EventProps} from "../components/Event"
+import Loading from "../components/Loading";
 
 function sortAndSeparateEvents(events: EventProps[]): [EventProps[], EventProps[]] {
     const now = new Date();
@@ -47,30 +49,52 @@ type Props = {
     events: EventProps[]
 }
 
-const Blog: React.FC<Props> = (props) => {
+const Home: React.FC<Props> = (props) => {
+    const router = useRouter();
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        const handleRouteChange = (url) => (url !== router.asPath) && setLoading(true);
+        const handleRouteComplete = (url) => (url === router.asPath) && setLoading(true);
+        router.events.on('routeChangeStart', handleRouteChange)
+        router.events.on('routeChangeComplete', handleRouteComplete)
+        router.events.on('routeChangeError', handleRouteComplete)
+
+        return () => {
+            router.events.off('routeChangeStart', handleRouteChange)
+            router.events.off('routeChangeComplete', handleRouteComplete)
+            router.events.off('routeChangeError', handleRouteComplete)
+        }
+    }, [])
+
     const [futureEvents, pastEvents] = sortAndSeparateEvents(props.events);
 
     return (
         <Layout>
-            <div className="hero">
-                <Image
-                    src="/ds_logo.png"
-                    style={{marginTop: 60}}
-                    width={200}
-                    height={100}
-                    alt="Dead Streets Wolf Logo"
-                />
-            </div>
-            <div className="page">
-                <main>
-                    <h1 className="upcoming-shows-header text-2xl">Upcoming Shows</h1>
-                    {futureEvents.map((event) => (
-                        <div key={event.id} className="event">
-                            <Event event={event}/>
+            {loading ? <Loading/> :
+                (
+                    <>
+                        <div className="hero">
+                            <Image
+                                src="/ds_logo.png"
+                                style={{marginTop: 60}}
+                                width={200}
+                                height={100}
+                                alt="Dead Streets Wolf Logo"
+                            />
                         </div>
-                    ))}
-                </main>
-            </div>
+                        <div className="page">
+                            <main>
+                                <h1 className="upcoming-shows-header text-2xl">Upcoming Shows</h1>
+                                {futureEvents.map((event) => (
+                                    <div key={event.id} className="event">
+                                        <Event event={event}/>
+                                    </div>
+                                ))}
+                            </main>
+                        </div>
+                    </>
+                )}
             <style jsx>{`
                 .hero {
                     background-size: cover;
@@ -83,7 +107,7 @@ const Blog: React.FC<Props> = (props) => {
                     justify-content: space-between;
                     padding: 0 50px;
                 }
-                
+
                 .upcoming-shows-header {
                     margin: 0 16px 8px 16px;
                 }
@@ -93,10 +117,10 @@ const Blog: React.FC<Props> = (props) => {
                         margin-left: 11%;
                     }
                 }
-                
+
                 @media (max-width: 600px) {
                     .hero {
-                        height: 200px; 
+                        height: 200px;
                     }
                 }
 
@@ -108,7 +132,7 @@ const Blog: React.FC<Props> = (props) => {
                         flex-direction: column;
                         margin-top: -26px;
                     }
-                    
+
                     .upcoming-shows-header {
                         text-align: center;
                     }
@@ -126,4 +150,4 @@ const Blog: React.FC<Props> = (props) => {
     )
 }
 
-export default Blog
+export default Home;

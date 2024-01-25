@@ -40,39 +40,6 @@ const Header: React.FC = () => {
 
     const {data: session, status} = useSession();
 
-    const navStyles = `
-          a {
-            text-decoration: none;
-            color: white;
-            display: inline-block;
-            opacity: ${session ? 100 : 0}
-          }
-
-          p {
-            display: inline-block;
-            font-size: 13px;
-            padding-right: 1rem;
-          }
-
-          a + a {
-            margin-left: 1rem;
-          }
-
-          .right {
-            margin-left: auto;
-          }
-
-          .right a {
-            //border: 1px solid var(--geist-foreground);
-            padding: 0.5rem 1rem;
-            border-radius: 3px;
-          }
-
-          button {
-            border: none;
-          }
-        `
-
     let options = null;
 
     if (!session) {
@@ -81,7 +48,6 @@ const Header: React.FC = () => {
                 <Link href="/api/auth/signin" style={{opacity: !session ? 0 : 1}}>
                     Log in
                 </Link>
-                {/*<style jsx>{navStyles}</style>*/}
             </div>
         );
     }
@@ -97,7 +63,6 @@ const Header: React.FC = () => {
                 <button onClick={() => signOut()}>
                     Log out
                 </button>
-                {/*<style jsx>{navStyles}</style>*/}
             </div>
         );
     }
@@ -105,7 +70,8 @@ const Header: React.FC = () => {
     if (status === 'loading') return <h1>"loading admin options..."</h1>
 
     return (
-        <nav className="flex justify-between items-center py-4 w-full z-10 bg-transparent" style={{position: 'sticky', top: 0}}>
+        <nav className="flex justify-between items-center py-4 w-full z-10 bg-transparent"
+             style={{position: 'sticky', top: 0}}>
             {options}
             <figure className="flex flex-col gap-3 mr-14 pt-4 max-[820px]:mr-4">
                 {socialMediaIcons.map(({icon, link}, index) => (
@@ -118,9 +84,6 @@ const Header: React.FC = () => {
             </figure>
             <style jsx>{`
                 nav {
-                    //display: flex;
-                    //padding: 1rem 2rem;
-                    //align-items: center;
                     background-color: rgba(0, 0, 0, 0);
                     position: absolute;
                     width: 100%;
