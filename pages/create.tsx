@@ -81,7 +81,7 @@ const CreateEvent: React.FC<{ event: EventProps }> = ({event}) => {
 
     return (
         <Layout>
-            {!loading ? <Loading />
+            {loading ? <Loading />
                 :
                 (
                     <div>
