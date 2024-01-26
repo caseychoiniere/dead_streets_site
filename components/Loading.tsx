@@ -2,7 +2,7 @@ import React from 'react';
 
 const Loading = () => {
     return (
-        <div role="status" className="absolute inset-y-2/4 right-1/2">
+        <div role="status" style={{transform: "translate(-50%, -50%)", position: "absolute", top: "50%", left: "50%"}}>
             <svg aria-hidden="true"
                  className="w-16 h-16 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
                  viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
