@@ -54,7 +54,7 @@ const Header: React.FC = () => {
 
     if (session) {
         options = (
-            <div className="list-none flex gap-14 ml-56">
+            <div className="list-none flex gap-14 ml-2.5 flex-col">
                 <Link href="/create">
                     <button>
                         New Event
