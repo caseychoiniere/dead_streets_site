@@ -38,7 +38,7 @@ const Header: React.FC = () => {
     const isActive: (pathname: string) => boolean = (pathname) =>
         router.pathname === pathname;
 
-    const {data: session, status} = useSession();
+    const {data: session} = useSession();
 
     let options = null;
 
@@ -66,8 +66,6 @@ const Header: React.FC = () => {
             </div>
         );
     }
-
-    if (status === 'loading') return <h1>"loading admin options..."</h1>
 
     return (
         <nav className="flex justify-between items-center py-4 w-full z-10 bg-transparent"

@@ -54,6 +54,8 @@ const Event: React.FC<{ event: EventProps }> = ({event}) => {
                             src={event.image}
                             width={400}
                             height={100}
+                            quality={50}
+                            priority={true}
                             alt={`Poster for ${event.title}`}
                         />
                     </div>
