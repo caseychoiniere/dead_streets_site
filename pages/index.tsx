@@ -9,18 +9,26 @@ import Loading from "../components/Loading";
 
 function sortAndSeparateEvents(events: EventProps[]): [EventProps[], EventProps[]] {
     const now = new Date();
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    const getEventDay = (event: { date: string | number | Date; }) => {
+        const eventDate = new Date(event.date);
+        return new Date(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate());
+    };
 
     const futureEvents = events
         .filter(event => {
-            const eventDate = new Date(event.date);
-            return eventDate >= now;
+            return getEventDay(event) >= today;
         })
         .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-    const pastEvents = events.filter(event => new Date(event.date) < now);
+    const pastEvents = events.filter(event => {
+        return getEventDay(event) < today;
+    });
 
     return [futureEvents, pastEvents];
 }
+
 
 export const getStaticProps: GetStaticProps = async () => {
     let events = await prisma.event.findMany({
