@@ -38,7 +38,7 @@ export default async function handle(req: {
         });
         res.json(event);
     } else if (req.method === 'PUT') {
-        const {title, location, description, date, image, time, cost} = req.body;
+        const {title, location, description, date, image, time, cost, eventURL} = req.body;
         try {
             const result = await prisma.event.update({
                 where: {id: eventId},
@@ -46,6 +46,7 @@ export default async function handle(req: {
                     title,
                     time: time,
                     cost,
+                    eventURL,
                     location: location,
                     description: description,
                     date: new Date(date),
