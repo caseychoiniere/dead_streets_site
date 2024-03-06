@@ -3,7 +3,8 @@ import {
     FaBandcamp,
     FaFacebook,
     FaInstagram,
-    FaSpotify
+    FaSpotify,
+    FaYoutube
 } from "react-icons/fa6";
 import {SiApplemusic} from "react-icons/si";
 
@@ -31,6 +32,10 @@ const socialMediaIcons = [
     {
         icon: <FaInstagram/>,
         link: "https://www.instagram.com/deadstreets.pnw"
+    },
+    {
+        icon: <FaYoutube/>,
+        link: "https://www.youtube.com/watch?v=ABPvBoiXZlY"
     },
 ];
 const Header: React.FC = () => {
