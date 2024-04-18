@@ -1,15 +1,17 @@
-import { NextApiHandler } from 'next';
-import NextAuth from 'next-auth';
-import { PrismaAdapter } from '@next-auth/prisma-adapter';
-import GitHubProvider from 'next-auth/providers/github';
-import GoogleProvider from 'next-auth/providers/google';
-import prisma from '../../../lib/prisma';
+import { NextApiHandler } from 'next'
+import NextAuth from 'next-auth'
+import { PrismaAdapter } from '@next-auth/prisma-adapter'
+import GitHubProvider from 'next-auth/providers/github'
+import GoogleProvider from 'next-auth/providers/google'
+import prisma from '../../../lib/prisma'
 
-const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options);
-export default authHandler;
+const authHandler: NextApiHandler = (req, res) => NextAuth(req, res, options)
+export default authHandler
 
-const allowedEmails = ['caseychoiniere@gmail.com', 'deadstreets.band@gmail.com', 'ilyseblaze@gmail.com']
-
+const allowedEmails =
+    process.env &&
+    process.env.AUTHORIZED_USERS &&
+    process.env.AUTHORIZED_USERS.split(', ')
 export const options = {
     providers: [
         GitHubProvider({
@@ -26,11 +28,11 @@ export const options = {
     callbacks: {
         async signIn({ user, account, profile }) {
             if (allowedEmails.includes(user.email)) {
-                return true;
+                return true
             }
 
-            console.log(`Unauthorized sign-in attempt: ${user.email}`);
-            return false;
+            console.log(`Unauthorized sign-in attempt: ${user.email}`)
+            return false
         },
     },
-};
+}
