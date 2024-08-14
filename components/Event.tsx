@@ -60,7 +60,7 @@ const Event: React.FC<{ event: EventProps }> = ({ event }) => {
                     <div className="w-auto md:w-1/2">
                         <Image
                             className="inset-0 h-full w-full object-cover object-center"
-                            src={event.image}
+                            src={event.image || '/no_flyer.png'}
                             width={400}
                             height={100}
                             quality={50}
