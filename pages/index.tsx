@@ -107,7 +107,7 @@ const Home: React.FC<Props> = (props) => {
                         />
                     </div>
                     <div className="page">
-                        <main>
+                        <main style={{ paddingBottom: 20 }}>
                             <h1 className="upcoming-shows-header text-2xl">
                                 Upcoming Shows
                             </h1>
