@@ -99,10 +99,10 @@ const Home: React.FC<Props> = (props) => {
                 <>
                     <div className="hero">
                         <Image
-                            src="/ds_logo.png"
-                            style={{ marginTop: 60 }}
-                            width={200}
-                            height={100}
+                            src="/ds_new_logo.png"
+                            style={{ marginTop: 80 }}
+                            width={400}
+                            height={200}
                             alt="Dead Streets Wolf Logo"
                         />
                     </div>
